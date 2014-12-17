@@ -1,0 +1,48 @@
+<!doctype html>
+<html ng-csp ng-app="popupApp">
+<head>
+    <title>Sitecore Analytics</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/popup.css" rel="stylesheet" />
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/ui-bootstrap-custom-0.12.0.min.js"></script>
+    <script src="js/popup.js"></script>
+</head>
+<body>
+    <div class="popup" ng-controller="MainController">
+        <h4>Cookies</h4>
+        <nav class="navbar">
+            <ul class="nav nav-pills nav-stacked">
+                <li>
+                    <a ng-click="newContact()" href="#" id="new-contact">
+                        <i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;New Contact
+                    </a>
+                </li>
+                <li>
+                    <a ng-click="newVisit()" href="#" id="new-visit">
+                        <i class="glyphicon glyphicon-refresh"></i>&nbsp;&nbsp;New Visit
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <h4>GeoIP</h4>
+        <nav class="navbar" style="margin-bottom: 0;">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="dropdown" dropdown>
+                    <a href="#" class="dropdown-toggle" title="{{selectedProfile.address}}" dropdown-toggle>{{selectedProfile.name}} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="resetProfile()" href="#">Default</a></li>
+                        <li ng-repeat="profile in profiles track by $index">
+                            <a href="#" ng-click="setProfile($index)" title="{{profile.address}}">{{profile.name}}</a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li><a href="options.html#ip-profiles" target="_blank">Manage Profiles</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>

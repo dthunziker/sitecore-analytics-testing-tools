@@ -1,0 +1,127 @@
+﻿<!doctype html>
+<html ng-csp ng-app="optionsApp">
+<head>
+    <title>Options</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/options.css" rel="stylesheet" />
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/ui-bootstrap-custom-0.12.0.min.js"></script>
+    <script src="js/options.js"></script>
+</head>
+<body>
+    <div class="options">
+        <h2>Cookie Settings</h2>
+        <section ng-controller="CookieController">
+            <div class="form-group">
+                <label>
+                    Reload current tab with every new contact/visit
+                </label>
+                <div>
+                    <label class="radio-inline">
+                        <input ng-model="refresh" ng-click="save()" type="radio" name="refresh" ng-value="true">
+                        Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input ng-model="refresh" ng-click="save()" type="radio" name="refresh" ng-value="false">
+                        No
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Clear browser cache with every new contact/visit
+                </label>
+                <div>
+                    <label class="radio-inline">
+                        <input ng-model="cache" ng-click="save()" type="radio" name="cache" ng-value="true">
+                        Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input ng-model="cache" ng-click="save()" type="radio" name="cache" ng-value="false">
+                        No
+                    </label>
+                </div>
+            </div>
+            <div class="well" ng-show="cache">
+                <label>Cache Clear Duration</label>
+                <div class="radio">
+                    <label>
+                        <input ng-model="cacheDuration" ng-click="save()" type="radio" name="cacheRadios" value="3600000">
+                        Hour
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input ng-model="cacheDuration" ng-click="save()" type="radio" name="cacheRadios" value="86400000">
+                        Day
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input ng-model="cacheDuration" ng-click="save()" type="radio" name="cacheRadios" value="604800000">
+                        Week
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input ng-model="cacheDuration" ng-click="save()" type="radio" name="cacheRadios" value="2628000000">
+                        Month
+                    </label>
+                </div>
+            </div>
+        </section>
+        <h2>GeoIP Settings</h2>
+        <section ng-controller="HeaderController">
+            <h4>Forwarded Request HTTP Header</h4>
+            <p>
+                Sitecore can be configured to resolve the client's IP address using an HTTP header variable. This behavior is controlled by the <code>Analytics.ForwardedRequestHttpHeader</code> setting which is located in the <code>\Includes\Analytics.config</code> config file. Although this setting is typically reserved for load-balanced environments, we can conveniently use it to pass in IP addresses of our choosing. The value below should match the value from the Sitecore.Analytics.config file. Typical values include <code>X-Forwarded-For</code> and <code>X-Real-IP</code>.
+            </p>
+            <div class="form-group">
+                <label for="forwarded-http-header">Analytics.ForwardedRequestHttpHeader</label>
+                <input type="text" ng-model="header" class="form-control" id="forwarded-http-header" />
+            </div>
+        </section>
+        <section ng-controller="ProfileController">
+            <h4>IP Address Profiles</h4>
+            <table id="ip-profiles" class="table">
+                <thead>
+                    <tr>
+                        <th>Profile Name</th>
+                        <th>IP Address</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Default</td>
+                        <td>127.0.0.1</td>
+                        <td></td>
+                    </tr>
+                    <tr ng-repeat="profile in profiles track by $index">
+                        <td>{{profile.name}}</td>
+                        <td>{{profile.address}}</td>
+                        <td style="text-align: right;">
+                            <div class="btn-group">
+                                <button type="button" title="Delete the {{profile.name}} profile" ng-click="removeProfile($index)" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>
+                            <input ng-model="profileName" type="text" class="form-control" placeholder="Profile Name" /></td>
+                        <td>
+                            <input ng-model="profileAddress" type="text" class="form-control" placeholder="IP Address" /></td>
+                        <td>
+                            <button ng-click="addProfile()" class="btn btn-primary" title="Add a new profile"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Profile</button></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+    </div>
+</body>
+</html>

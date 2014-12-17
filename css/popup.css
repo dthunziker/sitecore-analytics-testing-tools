@@ -1,0 +1,11 @@
+body {
+    width: 16em;
+}
+
+.popup {
+    padding: 2em;
+}
+
+.dropdown-menu {
+    margin-bottom: 2em;
+}
