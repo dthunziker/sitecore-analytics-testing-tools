@@ -30,8 +30,17 @@
         };
 
         $scope.removeProfile = function (index) {
-            $scope.profiles.splice(index, 1);
+            var profile = $scope.profiles.splice(index, 1);
             localStorage.sc_ip_profiles = JSON.stringify($scope.profiles);
+
+            // Clear selected profile if it was the one being deleted
+            console.log(localStorage.sc_ip_profile);
+            if (localStorage.sc_ip_profile) {
+                var selectedProfile = JSON.parse(localStorage.sc_ip_profile);
+                if (selectedProfile.name === profile[0].name) {
+                    localStorage.sc_ip_profile = '';
+                }
+            }
         }
 
     }])
