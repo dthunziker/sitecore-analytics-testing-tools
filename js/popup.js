@@ -13,6 +13,19 @@
         $scope.profiles = localStorage.sc_ip_profiles ? JSON.parse(localStorage.sc_ip_profiles) : [];
         $scope.selectedProfile = localStorage.sc_ip_profile ? JSON.parse(localStorage.sc_ip_profile) : defaultProfile;
 
+        getActiveTab(function (tab) {
+            getGuidFromCookie(constants.SC_CONTACT_COOKIE, tab.url, function (guid) {
+                $scope.$apply(function () {
+                    $scope.globalCookieValue = guid;
+                });
+            });
+            getGuidFromCookie(constants.SC_VISIT_COOKIE, tab.url, function (guid) {
+                $scope.$apply(function () {
+                    $scope.visitCookieValue = guid;
+                });
+            });
+        });
+
         $scope.resetProfile = function () {
             $scope.selectedProfile = defaultProfile;
             localStorage.sc_ip_profile = '';
@@ -50,6 +63,28 @@
                 name: cookieName
             });
             console.log('Removed cookie: ' + cookieName);
+        }
+
+        function getGuidFromCookie(cookieName, url, callback) {
+            chrome.cookies.get({
+                name: cookieName,
+                url: url
+            }, function (cookie) {
+                var guid = 'Unknown';
+                if (cookie) {
+                    var value = cookie.value.split('|')[0].toUpperCase();
+                    if (value.length == 32) {
+                        var chars = value.split('');
+                        chars.splice(8, 0, '-');
+                        chars.splice(13, 0, '-');
+                        chars.splice(18, 0, '-');
+                        chars.splice(23, 0, '-');
+                        guid = chars.join('');
+                    }
+                }
+
+                callback(guid);
+            });
         }
 
         function clearCache() {
