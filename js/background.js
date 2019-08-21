@@ -26,6 +26,6 @@
         return { requestHeaders: details.requestHeaders };
 
     },
-    { urls: ["<all_urls>"] },
+    { urls: ["<all_urls>"], types: ["main_frame"] },
     ["blocking", "requestHeaders"]
 );

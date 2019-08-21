@@ -19,11 +19,6 @@
                     $scope.globalCookieValue = guid;
                 });
             });
-            getGuidFromCookie(constants.SC_VISIT_COOKIE, tab.url, function (guid) {
-                $scope.$apply(function () {
-                    $scope.visitCookieValue = guid;
-                });
-            });
         });
 
         $scope.resetProfile = function () {
@@ -70,8 +65,12 @@
                 name: cookieName,
                 url: url
             }, function (cookie) {
-                var guid = 'Unknown';
                 if (cookie) {
+                    var cookieSecondsSinceEpoch = cookie.expirationDate - 3.154e8;
+                    var date = new Date(0);
+                    date.setSeconds(cookieSecondsSinceEpoch);
+                    var dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    console.log(date);
                     var value = cookie.value.split('|')[0].toUpperCase();
                     if (value.length == 32) {
                         var chars = value.split('');
@@ -80,10 +79,9 @@
                         chars.splice(18, 0, '-');
                         chars.splice(23, 0, '-');
                         guid = chars.join('');
+                        callback(date.toLocaleDateString("en-US", dateOptions) + ' | ' + guid);
                     }
                 }
-
-                callback(guid);
             });
         }
 

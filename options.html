@@ -77,7 +77,7 @@
         <section ng-controller="HeaderController">
             <h4>Forwarded Request HTTP Header</h4>
             <p>
-                Sitecore can be configured to resolve the client's IP address using an HTTP header variable. This behavior is controlled by the <code>Analytics.ForwardedRequestHttpHeader</code> setting which is located in the <code>\Includes\Analytics.config</code> config file. Although this setting is typically reserved for load-balanced environments, we can conveniently use it to pass in IP addresses of our choosing. The value below should match the value from the Sitecore.Analytics.config file. Typical values include <code>X-Forwarded-For</code> and <code>X-Real-IP</code>.
+                Sitecore can be configured to resolve the client's IP address using an HTTP header variable. This behavior is controlled by the <code>Analytics.ForwardedRequestHttpHeader</code> setting. Although this setting is typically reserved for load-balanced environments, we can conveniently use it to pass in IP addresses of our choosing. The value entered below should match the Sitecore setting. Typical values include <code>X-Forwarded-For</code> and <code>X-Real-IP</code>.
             </p>
             <div class="form-group">
                 <label for="forwarded-http-header">Analytics.ForwardedRequestHttpHeader</label>
