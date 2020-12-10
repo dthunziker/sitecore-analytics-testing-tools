@@ -13,8 +13,8 @@
         $scope.profiles = localStorage.sc_ip_profiles ? JSON.parse(localStorage.sc_ip_profiles) : [];
         $scope.selectedProfile = localStorage.sc_ip_profile ? JSON.parse(localStorage.sc_ip_profile) : defaultProfile;
 
-        getActiveTab(function (tab) {
-            getGuidFromCookie(constants.SC_CONTACT_COOKIE, tab.url, function (guid) {
+        getActiveTab(function (tab, storeId) {
+            getGuidFromCookie(constants.SC_CONTACT_COOKIE, tab.url, storeId, function (guid) {
                 $scope.$apply(function () {
                     $scope.globalCookieValue = guid;
                 });
@@ -34,36 +34,39 @@
         }
 
         $scope.newContact = function () {
-            getActiveTab(function (tab) {
-                removeCookie(constants.SC_CONTACT_COOKIE, tab.url);
-                removeCookie(constants.SC_VISIT_COOKIE, tab.url);
-                removeCookie(constants.SESSION_COOKIE, tab.url);
+            getActiveTab(function (tab, storeId) {
+                removeCookie(constants.SC_CONTACT_COOKIE, tab.url, storeId);
+                removeCookie(constants.SC_VISIT_COOKIE, tab.url, storeId);
+                removeCookie(constants.SESSION_COOKIE, tab.url, storeId);
                 clearCache();
                 reloadTab(tab.id);
             });
         }
 
         $scope.newVisit = function () {
-            getActiveTab(function (tab) {
-                removeCookie(constants.SC_VISIT_COOKIE, tab.url);
-                removeCookie(constants.SESSION_COOKIE, tab.url);
+            getActiveTab(function (tab, storeId) {
+                removeCookie(constants.SC_VISIT_COOKIE, tab.url, storeId);
+                removeCookie(constants.SESSION_COOKIE, tab.url, storeId);
                 clearCache();
                 reloadTab(tab.id);
             });
         }
 
-        function removeCookie(cookieName, url) {
+        function removeCookie(cookieName, url, storeId) {
             chrome.cookies.remove({
+                storeId: storeId,
                 url: url,
                 name: cookieName
+            }, function () {
+                console.log('Removed cookie: ' + cookieName);
             });
-            console.log('Removed cookie: ' + cookieName);
         }
 
-        function getGuidFromCookie(cookieName, url, callback) {
+        function getGuidFromCookie(cookieName, url, storeId, callback) {
             chrome.cookies.get({
                 name: cookieName,
-                url: url
+                url: url,
+                storeId: storeId
             }, function (cookie) {
                 if (cookie) {
                     var cookieSecondsSinceEpoch = cookie.expirationDate - 3.154e8;
@@ -110,8 +113,14 @@
 
         function getActiveTab(callback) {
             chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-                return callback(tabs[0]);
+                var tab = tabs[0];
+                chrome.cookies.getAllCookieStores(function (store) {
+                    for (var i = 0; i < store.length; i++) {
+                        if (store[i].tabIds.includes(tab.id)) {
+                            return callback(tab, store[i].id);
+                        }
+                    }
+                });
             });
         }
-
     }]);
